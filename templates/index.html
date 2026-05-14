@@ -1,67 +1,1008 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <title>Random Advice</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap');
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Paddy's Pub — It's Always Sunny</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
 
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #4a4a4a;
-        }
+  <style>
+    :root {
+      --green: #2dff88;
+      --green-dim: #1aad5a;
+      --green-dark: #0d5c32;
+      --bg: #050d08;
+      --bg2: #08140c;
+      --bg3: #0d1e13;
+      --surface: rgba(13,30,19,0.92);
+      --surface2: rgba(7,17,11,0.96);
+      --text: #c8ffda;
+      --text-dim: #79d89e;
+      --text-muted: #4a8c62;
+      --border: rgba(45,255,136,0.2);
+      --border-bright: rgba(45,255,136,0.6);
+      --glow: rgba(45,255,136,0.15);
+      --glow-bright: rgba(45,255,136,0.4);
+    }
 
-        .container {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 40px 60px;
-            border-radius: 15px;
-            box-shadow: 0 12px 25px rgba(0,0,0,0.1);
-            max-width: 600px;
-            text-align: center;
-        }
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 
-        h1 {
-            font-weight: 600;
-            font-size: 2.8rem;
-            margin-bottom: 20px;
-            color: #ff6f61;
-            letter-spacing: 1px;
-        }
+    html { scroll-behavior: smooth; }
 
-        p {
-            font-weight: 300;
-            font-size: 1.5rem;
-            line-height: 1.6;
-            margin: 0;
-            font-style: italic;
-            color: #333;
-        }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Barlow', sans-serif;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
 
-        /* Add a subtle fade-in animation */
-        .container {
-            animation: fadeIn 1.5s ease forwards;
-            opacity: 0;
-        }
+    /* === BACKGROUND === */
+    .bg-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .bg-layer::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 10% 0%, rgba(45,255,136,0.07) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 90% 100%, rgba(45,255,136,0.05) 0%, transparent 60%),
+        linear-gradient(160deg, #020805 0%, #06120a 40%, #050e08 100%);
+    }
+    .bg-layer::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: 0.4;
+    }
 
-        @keyframes fadeIn {
-            to {
-                opacity: 1;
-            }
-        }
-    </style>
+    /* === SCANLINES === */
+    .scanlines {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.08) 2px,
+        rgba(0,0,0,0.08) 4px
+      );
+    }
+
+    /* === HEADER === */
+    header {
+      position: relative;
+      z-index: 10;
+      padding: 0;
+      border-bottom: 1px solid var(--border);
+      background: rgba(5,13,8,0.95);
+      backdrop-filter: blur(12px);
+    }
+
+    .header-inner {
+      max-width: 1500px;
+      margin: 0 auto;
+      padding: 0 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      height: 80px;
+    }
+
+    .logo-wrap {
+      display: flex;
+      align-items: baseline;
+      gap: 14px;
+    }
+
+    .logo {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 2.6rem;
+      color: var(--green);
+      letter-spacing: 3px;
+      text-shadow: 0 0 20px rgba(45,255,136,0.5), 0 0 60px rgba(45,255,136,0.2);
+      animation: flicker 3s infinite;
+      line-height: 1;
+    }
+
+    .logo-pipe {
+      color: var(--border-bright);
+      font-size: 1.5rem;
+      font-weight: 300;
+    }
+
+    .logo-sub {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 3px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+    }
+
+    .header-badge {
+      background: rgba(45,255,136,0.08);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.85rem;
+      letter-spacing: 2px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    /* === MAIN LAYOUT === */
+    .app {
+      position: relative;
+      z-index: 5;
+      max-width: 1500px;
+      margin: 0 auto;
+      padding: 30px;
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 28px;
+      min-height: calc(100vh - 80px);
+    }
+
+    /* === SIDEBAR === */
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .sidebar-section {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .sidebar-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: 14px 18px 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Season grid */
+    .season-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--border);
+    }
+
+    .season-btn {
+      background: var(--bg2);
+      border: none;
+      color: var(--text-dim);
+      font-family: 'Bebas Neue', cursive;
+      font-size: 1.3rem;
+      letter-spacing: 1px;
+      padding: 16px 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+
+    .season-btn:hover {
+      background: rgba(45,255,136,0.08);
+      color: var(--green);
+    }
+
+    .season-btn.active {
+      background: rgba(45,255,136,0.14);
+      color: var(--green);
+    }
+
+    .season-btn.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--green);
+      box-shadow: 0 0 8px var(--green);
+    }
+
+    /* Now playing info */
+    .now-playing-info {
+      padding: 18px;
+      min-height: 120px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .np-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 4px;
+      color: var(--green);
+      text-transform: uppercase;
+    }
+
+    .np-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.2;
+    }
+
+    .np-ep {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .np-idle {
+      color: var(--text-muted);
+      font-style: italic;
+      font-size: 0.95rem;
+    }
+
+    /* Stats panel */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--border);
+    }
+
+    .stat-item {
+      background: var(--bg2);
+      padding: 16px 14px;
+      text-align: center;
+    }
+
+    .stat-num {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 2rem;
+      color: var(--green);
+      line-height: 1;
+      text-shadow: 0 0 12px rgba(45,255,136,0.4);
+    }
+
+    .stat-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 3px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    /* Characters */
+    .gang-list {
+      padding: 14px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .gang-member {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      transition: background 0.2s;
+    }
+
+    .gang-member:hover { background: rgba(45,255,136,0.06); }
+
+    .gang-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: rgba(45,255,136,0.1);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    .gang-name {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+
+    .gang-role {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* === MAIN CONTENT === */
+    .main-content {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    /* Player */
+    .player-wrap {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .player-wrap.has-video {
+      border-color: rgba(45,255,136,0.35);
+      box-shadow: 0 0 40px rgba(45,255,136,0.1);
+    }
+
+    .player-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(5,10,7,0.8);
+    }
+
+    .player-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .player-dots span {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--border);
+    }
+
+    .player-dots span:nth-child(1) { background: rgba(255,80,80,0.5); }
+    .player-dots span:nth-child(2) { background: rgba(255,200,50,0.5); }
+    .player-dots span:nth-child(3) { background: rgba(45,255,136,0.4); }
+
+    .player-status {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.8rem;
+      letter-spacing: 2px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    #player-placeholder {
+      height: 540px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      background: radial-gradient(ellipse at center, rgba(45,255,136,0.04) 0%, transparent 70%);
+    }
+
+    .play-icon {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      font-size: 1.6rem;
+      transition: all 0.3s;
+    }
+
+    .placeholder-text {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1rem;
+      letter-spacing: 3px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    #player {
+      display: none;
+      width: 100%;
+      height: 540px;
+      border: none;
+      background: #000;
+    }
+
+    /* === EPISODE GRID === */
+    .episodes-section {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .episodes-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .episodes-title {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 1.4rem;
+      letter-spacing: 3px;
+      color: var(--text);
+    }
+
+    .episodes-meta {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.8rem;
+      letter-spacing: 2px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      background: rgba(45,255,136,0.06);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 5px 12px;
+    }
+
+    .episode-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 1px;
+      background: var(--border);
+    }
+
+    .ep-card {
+      background: var(--bg2);
+      padding: 20px 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-height: 120px;
+    }
+
+    .ep-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: transparent;
+      transition: background 0.2s, box-shadow 0.2s;
+    }
+
+    .ep-card:hover {
+      background: rgba(45,255,136,0.06);
+    }
+
+    .ep-card:hover::before {
+      background: var(--green);
+      box-shadow: 0 0 8px rgba(45,255,136,0.5);
+    }
+
+    .ep-card.active {
+      background: rgba(45,255,136,0.1);
+    }
+
+    .ep-card.active::before {
+      background: var(--green);
+      box-shadow: 0 0 12px rgba(45,255,136,0.7);
+    }
+
+    .ep-num {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 2.2rem;
+      color: var(--text-muted);
+      line-height: 1;
+      transition: color 0.2s;
+    }
+
+    .ep-card:hover .ep-num,
+    .ep-card.active .ep-num {
+      color: var(--green);
+      text-shadow: 0 0 12px rgba(45,255,136,0.4);
+    }
+
+    .ep-code {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .ep-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text-dim);
+      line-height: 1.3;
+      flex: 1;
+    }
+
+    .ep-play-btn {
+      display: none;
+      align-items: center;
+      gap: 5px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--green);
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    .ep-play-btn::before {
+      content: '▶';
+      font-size: 0.6rem;
+    }
+
+    .ep-card:hover .ep-play-btn {
+      display: flex;
+    }
+
+    .ep-card.active .ep-play-btn {
+      display: flex;
+    }
+
+    /* Footer */
+    footer {
+      position: relative;
+      z-index: 5;
+      text-align: center;
+      padding: 30px;
+      color: var(--text-muted);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.85rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      border-top: 1px solid var(--border);
+    }
+
+    .source-btns { display: flex; }
+    .src-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-muted);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      padding: 4px 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .src-btn:hover { border-color: var(--green); color: var(--green); }
+    .src-btn.active { background: rgba(45,255,136,0.12); border-color: var(--green); color: var(--green); }
+
+    /* Animations */
+    @keyframes flicker {
+      0%, 90%, 100% { opacity: 1; }
+      92% { opacity: 0.85; }
+      94% { opacity: 1; }
+      96% { opacity: 0.9; }
+    }
+
+    .ep-card {
+      animation: fadeIn 0.3s ease both;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Responsive */
+    @media (max-width: 1000px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
+      .sidebar {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+      }
+      .header-inner { padding: 0 16px; }
+    }
+
+    @media (max-width: 640px) {
+      .app { padding: 16px; }
+      .sidebar { grid-template-columns: 1fr; }
+      .logo { font-size: 1.9rem; }
+      .logo-sub { display: none; }
+      #player { height: 240px; }
+      #player-placeholder { height: 240px; }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Here’s your advice from Arpan:</h1>
-        <p>{{ advice }}</p>
+
+<div class="bg-layer"></div>
+<div class="scanlines"></div>
+
+<header>
+  <div class="header-inner">
+    <div class="logo-wrap">
+      <div class="logo">Paddy's Pub</div>
+      <span class="logo-pipe">|</span>
+      <div class="logo-sub">It's Always Sunny in Philadelphia</div>
     </div>
+    <div class="header-badge">🍺 Est. 2005 · Philadelphia</div>
+  </div>
+</header>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <!-- Season Picker -->
+    <div class="sidebar-section">
+      <div class="sidebar-label">Season</div>
+      <div class="season-grid" id="seasonGrid"></div>
+    </div>
+
+    <!-- Now Playing -->
+    <div class="sidebar-section">
+      <div class="sidebar-label">Now Playing</div>
+      <div class="now-playing-info" id="nowPlayingInfo">
+        <p class="np-idle">Select an episode to begin</p>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="sidebar-section">
+      <div class="sidebar-label">Stats</div>
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-num">16</div>
+          <div class="stat-label">Seasons</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num" id="totalEps">168</div>
+          <div class="stat-label">Episodes</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">2005</div>
+          <div class="stat-label">Debut</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">FX</div>
+          <div class="stat-label">Network</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- The Gang -->
+    <div class="sidebar-section">
+      <div class="sidebar-label">The Gang</div>
+      <div class="gang-list">
+        <div class="gang-member">
+          <div class="gang-avatar">🎸</div>
+          <div>
+            <div class="gang-name">Dennis Reynolds</div>
+            <div class="gang-role">The Golden God</div>
+          </div>
+        </div>
+        <div class="gang-member">
+          <div class="gang-avatar">🪣</div>
+          <div>
+            <div class="gang-name">Charlie Kelly</div>
+            <div class="gang-role">Wild Card</div>
+          </div>
+        </div>
+        <div class="gang-member">
+          <div class="gang-avatar">🔨</div>
+          <div>
+            <div class="gang-name">Mac McDonald</div>
+            <div class="gang-role">Enforcer</div>
+          </div>
+        </div>
+        <div class="gang-member">
+          <div class="gang-avatar">💼</div>
+          <div>
+            <div class="gang-name">Dee Reynolds</div>
+            <div class="gang-role">The Waitress</div>
+          </div>
+        </div>
+        <div class="gang-member">
+          <div class="gang-avatar">🥃</div>
+          <div>
+            <div class="gang-name">Frank Reynolds</div>
+            <div class="gang-role">The Bankroller</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+
+    <!-- Player -->
+    <div class="player-wrap" id="playerWrap">
+      <div class="player-toolbar">
+        <div class="player-dots">
+          <span></span><span></span><span></span>
+        </div>
+        <div class="player-status" id="playerStatus">Ready</div>
+        <div class="source-btns" id="sourceBtns" style="display:none; gap:6px; flex-wrap:wrap;">
+          <button class="src-btn" data-src="multiembed" onclick="switchSource('multiembed',this)">MultiEmbed</button>
+          <button class="src-btn" data-src="vidsrc" onclick="switchSource('vidsrc',this)">VidSrc</button>
+          <button class="src-btn active" data-src="2embed" onclick="switchSource('2embed',this)">2Embed</button>
+          <button class="src-btn" data-src="vidsrcicu" onclick="switchSource('vidsrcicu',this)">VidSrc.icu</button>
+        </div>
+      </div>
+      <div id="player-placeholder">
+        <div class="play-icon">▶</div>
+        <div class="placeholder-text">Choose an Episode</div>
+      </div>
+      <iframe id="player" src="about:blank" allowfullscreen></iframe>
+    </div>
+
+    <!-- Episodes -->
+    <div class="episodes-section">
+      <div class="episodes-header">
+        <div class="episodes-title" id="episodesTitle">Season 1</div>
+        <div class="episodes-meta" id="episodesMeta">7 Episodes</div>
+      </div>
+      <div class="episode-grid" id="episodeGrid"></div>
+    </div>
+
+  </main>
+</div>
+
+<footer>Wild Card, Bitches! 🍺 — Paddy's Pub, South Philadelphia</footer>
+
+<script>
+  const seasons = {
+    1:7, 2:10, 3:15, 4:13, 5:12,
+    6:12, 7:13, 8:10, 9:10,
+    10:10, 11:10, 12:10,
+    13:10, 14:10, 15:8, 16:8
+  };
+
+  const episodeNames = {
+    1: [
+      "The Gang Gets Racist", "Charlie Wants an Abortion", "Underage Drinking: A National Concern",
+      "Charlie Has Cancer", "Gun Fever", "The Gang Finds a Dead Guy", "Charlie Got Molested"
+    ],
+    2: [
+      "Charlie Gets Crippled", "The Gang Goes Jihad", "Dennis and Dee Go on Welfare",
+      "Mac Bangs Dennis' Mom", "Hundred Dollar Baby", "The Gang Gives Back",
+      "The Gang Exploits a Miracle", "The Gang Gets Whacked (Part 1)",
+      "The Gang Gets Whacked (Part 2)", "Dennis and Dee Get a New Dad"
+    ],
+    3: [
+      "The Gang Finds a Dumpster Baby", "The Gang Gets Invincible", "Dennis and Dee's Mom Is Dead",
+      "The Gang Gets Held Hostage", "The Waitress Is Getting Married",
+      "The Gang Solves the North Korea Situation", "The Gang Sells Out",
+      "Frank Sets Sweet Dee on Fire", "Sweet Dee's Dating a Retarded Person",
+      "Mac Is a Serial Killer", "Dennis Looks Like a Registered Sex Offender",
+      "The Gang Gets Whacked (Part 1)", "The Gang Gets Whacked (Part 2)",
+      "Bums: Making a Mess All Over the City", "The Gang Dances Their Asses Off"
+    ],
+    4: [
+      "Mac and Dennis: Manhunters", "The Gang Solves the Gas Crisis",
+      "America's Next Top Paddy's Billboard Model Contest",
+      "Mac's Banging the Waitress", "Mac and Charlie Die (Part 1)",
+      "Mac and Charlie Die (Part 2)", "Who Pooped the Bed?",
+      "Paddy's Pub: The Worst Bar in Philadelphia", "Dennis Reynolds: An Erotic Life",
+      "Sweet Dee Has a Heart Attack", "The Gang Cracks the Liberty Bell",
+      "The Gang Gets Extreme: Home Makeover Edition", "The Nightman Cometh"
+    ],
+    5: [
+      "The Gang Exploits the Mortgage Crisis", "The Gang Hits the Road",
+      "The Great Recession", "The Gang Gives Frank an Intervention",
+      "The Waitress Is Getting Married", "The World Series Defense",
+      "The Gang Wrestles for the Troops", "Paddy's Pub: Home of the Original Kitten Mittens",
+      "Mac and Dennis Break Up", "The D.E.N.N.I.S. System",
+      "Mac and Charlie Write a Movie", "A Very Sunny Christmas"
+    ],
+    6: [
+      "Mac Fights Gay Marriage", "Dennis Gets Divorced",
+      "The Gang Buys a Boat", "Mac's Big Break",
+      "Mac and Charlie: White Trash", "Mac's Mom Burns Her House Down",
+      "Who Got Dee Pregnant?", "The Gang Gets a New Member",
+      "Dee Reynolds: Shaping America", "Charlie Kelly: King of the Rats",
+      "The Gang Gets Stranded in the Woods", "Dee Gives Birth"
+    ],
+    7: [
+      "Frank's Pretty Woman", "The Gang Goes to the Jersey Shore",
+      "Frank Reynolds' Little Beauties", "Sweet Dee Gets Audited",
+      "Frank's Brother", "The Storm of the Century",
+      "Chardee MacDennis: The Game of Games", "The ANTI-Social Network",
+      "The Gang Gets Trapped", "How Mac Got Fat",
+      "Thunder Gun Express", "The High School Reunion (Part 1)",
+      "The High School Reunion (Part 2): The Gang's Revenge"
+    ],
+    8: [
+      "Pop-Pop: The Game of Games", "The Gang Recycles Their Trash",
+      "The Maureen Ponderosa Wedding Massacre", "Charlie and Dee Find Love",
+      "The Gang Gets Analyzed", "Charlie's Mom Has Cancer",
+      "Frank's Back in Business", "Charlie Rules the World",
+      "The Gang Dines Out", "Reynolds vs. Reynolds: The Cereal Defense"
+    ],
+    9: [
+      "The Gang Broke Dee", "Gun Fever Too: Still Hot",
+      "The Gang Tries Desperately to Win an Award", "Mac and Dennis Buy a Timeshare",
+      "Mac Day", "The Gang Saves the Day",
+      "The Gang Gets Quarantined", "Flowers for Charlie",
+      "The Gang Makes Lethal Weapon 6", "The Gang Squashes Their Beefs"
+    ],
+    10: [
+      "The Gang Beats Boggs", "The Gang Group Dates",
+      "Psycho Pete Returns", "Charlie Work",
+      "The Gang Spies Like U.S.", "The Gang Misses the Boat",
+      "Mac Kills His Dad", "The Gang Goes on Family Fight",
+      "Frank Retires", "Ass Kickers United: Mac and Charlie Join a Cult"
+    ],
+    11: [
+      "Chardee MacDennis 2: Electric Boogaloo", "Frank Falls Out the Window",
+      "The Gang Hits the Slopes", "Dee Made a Smut Film",
+      "Mac & Dennis Move to the Suburbs", "Being Frank",
+      "McPoyle vs. Ponderosa: The Trial of the Century",
+      "Charlie Catches a Leprechaun", "The Gang Goes to Hell (Part 1)",
+      "The Gang Goes to Hell (Part 2)"
+    ],
+    12: [
+      "PTSDee", "The Gang Goes to a Water Park",
+      "Old Lady House: A Situation Comedy", "Chardee MacDennis: The Game of Games 2",
+      "Making Dennis Reynolds a Murderer", "Hero or Hate Crime?",
+      "PTSDee", "The Gang Tends Bar",
+      "A Cricket's Tale", "Dennis' Double Life"
+    ],
+    13: [
+      "The Gang Makes Paddy's Great Again", "The Gang Escapes",
+      "Charlie's Home Alone", "Time's Up for the Gang",
+      "The Gang Gets New Wheels", "The Gang Solves the Bathroom Problem",
+      "The Gang Does a Clip Show", "Charlie's Little Helper",
+      "A Tale of Two Rats", "Mac Finds His Pride"
+    ],
+    14: [
+      "The Gang Gets Romantic", "Thunder Gun 4: Maximum Cool",
+      "Dee Day", "The Gang Chokes",
+      "The Gang Texts", "The Janitor Always Mops Twice",
+      "The Gang Solves Global Warming", "Paddy's Has a Jumper",
+      "The Gang Gets Lawyer'd", "Waiting for Big Mo"
+    ],
+    15: [
+      "2020: A Year in Review", "The Gang Makes Lethal Weapon 7",
+      "The Gang Replaces Dee with a Monkey", "Dee Needs a Father Figure",
+      "The Gang Goes to Ireland", "The Gang Carries a Corpse Up a Mountain",
+      "The Gang Nails the Atmosphere", "Bar Rescue"
+    ],
+    16: [
+      "The Gang Gets Offended", "Dennis Takes a Mental Health Day",
+      "Frank vs. Russia", "The Gang Gets Out of the Shire",
+      "The Incident", "Celebrity Booze: The Ultimate Cash Grab",
+      "The Gang Spies on a Soldier", "The Gang Does DENNIS Right"
+    ]
+  };
+
+  let activeSeason = 1;
+  let activeCard = null;
+  const player = document.getElementById('player');
+  const placeholder = document.getElementById('player-placeholder');
+  const playerWrap = document.getElementById('playerWrap');
+  const playerStatus = document.getElementById('playerStatus');
+  const nowPlayingInfo = document.getElementById('nowPlayingInfo');
+  const episodeGrid = document.getElementById('episodeGrid');
+  const episodesTitle = document.getElementById('episodesTitle');
+  const episodesMeta = document.getElementById('episodesMeta');
+
+  // Build season buttons
+  const seasonGrid = document.getElementById('seasonGrid');
+  Object.keys(seasons).forEach(s => {
+    const btn = document.createElement('button');
+    btn.className = 'season-btn' + (parseInt(s) === 1 ? ' active' : '');
+    btn.textContent = s;
+    btn.dataset.season = s;
+    btn.onclick = () => selectSeason(parseInt(s));
+    seasonGrid.appendChild(btn);
+  });
+
+  function selectSeason(s) {
+    activeSeason = s;
+    document.querySelectorAll('.season-btn').forEach(b => {
+      b.classList.toggle('active', parseInt(b.dataset.season) === s);
+    });
+    loadEpisodes(s);
+  }
+
+  function loadEpisodes(s) {
+    const total = seasons[s];
+    const names = episodeNames[s] || [];
+    episodesTitle.textContent = `Season ${s}`;
+    episodesMeta.textContent = `${total} Episode${total > 1 ? 's' : ''}`;
+    episodeGrid.innerHTML = '';
+    activeCard = null;
+
+    for (let ep = 1; ep <= total; ep++) {
+      const card = document.createElement('div');
+      card.className = 'ep-card';
+      card.style.animationDelay = `${(ep - 1) * 0.02}s`;
+
+      const name = names[ep - 1] || '';
+      const code = `S${String(s).padStart(2,'0')}E${String(ep).padStart(2,'0')}`;
+      const label = name || code;
+
+      card.innerHTML = `
+        <div class="ep-num">${String(ep).padStart(2,'0')}</div>
+        <div class="ep-code">${code}</div>
+        ${name ? `<div class="ep-title">${name}</div>` : ''}
+        <div class="ep-play-btn">Play Episode</div>
+      `;
+
+      card.onclick = () => playEpisode(s, ep, name, card, code);
+      episodeGrid.appendChild(card);
+    }
+  }
+
+  let currentS = 1, currentEp = 1;
+  let currentSource = 'multiembed';
+
+  const sources = {
+    'multiembed': (s, e) => `https://multiembed.mov/?video_id=2710&tmdb=1&s=${s}&e=${e}`,
+    'vidsrc':     (s, e) => `https://vidsrc.me/embed/tv?tmdb=2710&season=${s}&episode=${e}`,
+    '2embed':     (s, e) => `https://www.2embed.stream/embed/tv/2710/${s}/${e}`,
+    'vidsrcicu':  (s, e) => `https://vidsrc.icu/embed/tv/2710/${s}/${e}`,
+  };
+
+  function switchSource(src, btn) {
+    currentSource = src;
+    document.querySelectorAll('.src-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    player.src = sources[src](currentS, currentEp);
+  }
+
+  function playEpisode(s, ep, name, card, code) {
+    if (activeCard) activeCard.classList.remove('active');
+    card.classList.add('active');
+    activeCard = card;
+    currentS = s; currentEp = ep;
+
+    const url = sources[currentSource](s, ep);
+    player.src = url;
+    player.style.display = 'block';
+    placeholder.style.display = 'none';
+    playerWrap.classList.add('has-video');
+    document.getElementById('sourceBtns').style.display = 'flex';
+
+    const label = name || code;
+    playerStatus.textContent = `Playing ${code}`;
+
+    nowPlayingInfo.innerHTML = `
+      <div class="np-label">▶ Now Playing</div>
+      <div class="np-title">${label}</div>
+      <div class="np-ep">Season ${s} · Episode ${ep}</div>
+    `;
+
+    playerWrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // Init
+  loadEpisodes(1);
+</script>
 </body>
 </html>
-
